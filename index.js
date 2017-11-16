@@ -2,35 +2,38 @@ window.onload = function(){
     var canvas = document.getElementById('canvas');
     var body = document.getElementsByTagName('body')[0];
     canvas.width = body.clientWidth;
-    canvas.height = body.clientHeight / 2;
+    canvas.height = body.clientHeight;
     var bound = canvas.getBoundingClientRect();
     var ctx = canvas.getContext('2d');
     var width = bound.width, height = bound.height;
     
     var circle = new Circle({
-        ballNums: 2
+        ballNums: 200,
+        fillColor: 'rgba(255, 255, 255, .5)',
+        radius: 1
     });
     circle.init();
     function Circle(o) {
         o = o || {};
         this.instance = [];
+        this.maxLineLength = o.maxLineLength || 100;
         function Ball() {
-            this.radius = o.radius || (o.MaxRadius || 20) * Math.random(),
-            this.startDeg = 0,
-            this.endDeg = Math.PI * 2,
-            this.clockWay = false,
-            this.fillColor = o.fillColor || randomColor(),
-            this.borderColor = 'transparent',
-            this.dirX = 1,
-            this.dirY = 1,
-            this.speed = o.speed || 5 * Math.random(),
-            this.X = getRandom(width),
-            this.Y = getRandom(height),
+            this.radius = o.radius || (o.MaxRadius || 20) * Math.random();
+            this.startDeg = 0;
+            this.endDeg = Math.PI * 2;
+            this.clockWay = false;
+            this.fillColor = o.fillColor || randomColor();
+            this.borderColor = 'transparent';
+            this.dirX = 1;
+            this.dirY = 1;
+            this.speed = o.speed || 1 * Math.random() - 0.3;
+            this.X = getRandom(width);
+            this.Y = getRandom(height);
             this.resetDir = function() {
-                if (this.X < 10 || this.X > width - 10) {
+                if (this.X < this.radius || this.X > width - this.radius) {
                     this.dirX = -this.dirX;
                 }
-                if (this.Y < 10 || this.Y > height - 10) {
+                if (this.Y < this.radius || this.Y > height - this.radius) {
                     this.dirY = -this.dirY;
                 }  
             };
@@ -49,7 +52,7 @@ window.onload = function(){
         };
         this.arc = function() {
             // ctx.translate(this.X, this.Y);
-            for (var i = 0; i< this.instance.length; i++) {
+            for (var i = 0; i < this.instance.length; i++) {
                 var ball = this.instance[i];
                 ctx.save();
                 ctx.fillStyle = ball.fillColor;
@@ -59,6 +62,19 @@ window.onload = function(){
                 ctx.fill(); 
                 ctx.closePath();
                 ctx.restore();
+                for(var j = i + 1; j < this.instance.length; j++) {
+                    var s = Math.pow(ball.X - this.instance[j].X, 2) + Math.pow(ball.Y - this.instance[j].Y, 2);
+                        s = Math.sqrt(s);
+                    if (s < this.maxLineLength) {
+                        ctx.beginPath();
+                        ctx.moveTo(ball.X, ball.Y);
+                        ctx.lineTo(this.instance[j].X, this.instance[j].Y);
+                        ctx.strokeStyle = 'rgba(255, 255, 255, ' + (this.maxLineLength - s) / (this.maxLineLength * 1.3)+')';
+                        ctx.strokeWidth = 1;
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
             }
         };
         this.draw = function() {
@@ -69,6 +85,7 @@ window.onload = function(){
             for(var i = 0; i < this.instance.length; i++) {
                 var ball = this.instance[i];
                 ball.init();
+                
             }
             this.draw();
             requestAnimationFrame(this.move.bind(this));
