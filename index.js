@@ -10,7 +10,7 @@ window.onload = function(){
     var circle = new Circle({
         ballNums: 200,
         fillColor: 'rgba(255, 255, 255, .5)',
-        radius: 1
+        // radius: 1
     });
     circle.init();
     function Circle(o) {
