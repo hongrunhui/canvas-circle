@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
@@ -13,7 +14,8 @@
           height: 100%;
       }
       canvas {
-          background-image: linear-gradient(135deg,#79f1a4,#0e5cad);
+        background-image: linear-gradient(-50deg,RGB(255, 106, 100),RGB(71, 0, 182));
+          /* background-image: linear-gradient(135deg,#79f1a4,#0e5cad); */
       }
   </style>
 </head>
@@ -22,12 +24,6 @@
     
   </canvas>
   <script src="./index.js"></script>
-  <script>
-      var body = document.getElementsByTagName('body')[0];
-      var canvas = document.createElement('canvas');
-      canvas.id = 'canvas';
-      body.appendChild(canvas);
-  </script>
 </body>
 
 </html>

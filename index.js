@@ -6,13 +6,51 @@ window.onload = function(){
     var bound = canvas.getBoundingClientRect();
     var ctx = canvas.getContext('2d');
     var width = bound.width, height = bound.height;
-    
-    var circle = new Circle({
-        ballNums: 200,
+    var circleConfig = {
+        ballNums: 300,
         fillColor: 'rgba(255, 255, 255, .5)',
-        // radius: 1
-    });
+        radius: 1
+    };
+    var circle = new Circle(circleConfig);
     circle.init();
+    var zoom=function(e){ 
+          var e = e || window.event; 
+          if (!e.deltaX) {
+              if (e.deltaY < 0) {
+                if (circleConfig.radius) {
+                    circleConfig.radius = null;
+                    var circle = new Circle({
+                        ballNums: 300,
+                        fillColor: 'rgba(255, 255, 255, .5)',
+                        // radius: 1
+                    });
+                    circle.init();
+                }
+                
+              }
+              else {
+                if (!circleConfig.radius) {
+                    circleConfig.radius = 1;
+                    var circle = new Circle({
+                        ballNums: 300,
+                        fillColor: 'rgba(255, 255, 255, .5)',
+                        radius: 1
+                    });
+                    circle.init();
+                }
+              }
+          }
+          if(e.wheelDelta && event.ctrlKey){
+               event.returnValue = false
+          }else if(e.detail){
+              
+               event.returnValue = false;
+          } 
+    }  
+    if(document.addEventListener){ 
+        document.addEventListener('DOMMouseScroll' , zoom , false); 
+    }
+    window.onmousewheel = document.onmousewheel = zoom;
     function Circle(o) {
         o = o || {};
         this.instance = [];
